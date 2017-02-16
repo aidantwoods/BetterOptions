@@ -1,0 +1,13 @@
+{
+    "name": "aidantwoods/betteroptions",
+    "description": "",
+    "license": "MIT",
+    "autoload": {
+        "psr-4":{
+            "Aidantwoods\\BetterOptions\\": ["src/"]
+        }
+    },
+    "require": {
+        "php": ">=7.0"
+    }
+}

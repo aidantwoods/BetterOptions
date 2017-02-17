@@ -65,10 +65,22 @@ interface OptionInterface extends GroupObject
      *
      * @param mixed $value set a value of the type returned by {@see getType}.
      *  record this event such that {@see isSet} will return true
-     *
-     * @return mixed return a value of the type returned by {@see getType}
      */
     public function setValue($value);
+
+    /**
+     * Set a description for the option
+     *
+     * @param string $description the description
+     */
+    public function setDescription(string $description);
+
+    /**
+     * Get the description of the option
+     *
+     * @return ?string $description the description
+     */
+    public function getDescription() : ?string;
 
     /**
      * Check whether the option has been set

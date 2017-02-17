@@ -30,6 +30,8 @@ class OptionLoader
 
     private $objects = array();
 
+    private $optionCatalogue = array();
+
     public function __construct(string $config)
     {
         if ( ! is_file($config))
@@ -52,9 +54,38 @@ class OptionLoader
         }
     }
 
-    public function get()
+    public function getObjects()
     {
         return $this->objects;
+    }
+
+    public function getOptions() : array
+    {
+        return $this->optionCatalogue;
+    }
+
+    public function getOption(string $printableName) : Option
+    {
+        return $this->optionCatalogue[$printableName] ?? null;
+    }
+
+    public function getResponseMessages()
+    {
+        $responses = array();
+
+        foreach ($this->objects as $object)
+        {
+            $responses[] = $object->respond();
+        }
+
+        $messages = array();
+
+        foreach ($this->responder($responses) as $message)
+        {
+            $messages[] = $message;
+        }
+
+        return $messages;
     }
 
     private function itterator($json)
@@ -152,11 +183,28 @@ class OptionLoader
             }
         }
 
+        $this->optionCatalogue[$option->getPrintableName()] = $option;
+
         return $option;
     }
 
     private function optionCharacteristic(string $characteristic)
     {
         return Option::CHARACTERISTICS[strtoupper($characteristic)];
+    }
+
+    private function responder(&$responses)
+    {
+        foreach ($responses as $response)
+        {
+            if (is_array($response))
+            {
+                $responses = array_merge($responses, $response);
+            }
+            else
+            {
+                yield $response->getMessage();
+            }
+        }
     }
 }

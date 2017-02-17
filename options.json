@@ -1,14 +1,16 @@
 [
     {
         "group": "or",
-        "members": [
+        "members":
+        [
             {
                 "option": "foo",
                 "type": "string[]",
                 "default": "foo-default",
                 "characteristic": "long",
                 "description": "Foo.",
-                "aliases": [
+                "aliases":
+                [
                     {
                         "option": "fooalias",
                         "characteristic": "short"
@@ -22,7 +24,8 @@
             },
             {
                 "group": "xor",
-                "members": [
+                "members":
+                [
                     {
                         "option": "baz",
                         "type": "bool",

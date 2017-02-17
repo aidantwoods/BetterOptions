@@ -84,7 +84,7 @@ abstract class Type
 
         self::assertValid($type);
 
-        return self::MAP[$type].($keepExt and $arrayExt ? '[]' : '');
+        return self::MAP[$type].(($keepExt and $arrayExt) ? '[]' : '');
     }
 
     /**
@@ -101,7 +101,7 @@ abstract class Type
     {
         $type = self::normalise($type);
 
-        if ( ! method_exists(self, "cast_$type"))
+        if ( ! method_exists(__CLASS__, "cast_$type"))
         {
             throw new Exception(
                 "Type $type could not be casted: method not implemented."

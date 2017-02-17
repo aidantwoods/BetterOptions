@@ -19,7 +19,7 @@ class XORGroup implements Group
      *
      * @return Group return the current group instance
      */
-    public function addObject(GroupObject $object) : Group
+    public function add(GroupObject $object) : Group
     {
         if (count($this->objects) < 2)
         {
@@ -41,7 +41,7 @@ class XORGroup implements Group
      * @return GroupObject[]
      *  return an array of GroupObject objects
      */
-    public function getObjects() : array
+    public function get() : array
     {
         foreach($this->objects as $object)
         {
@@ -99,7 +99,7 @@ class XORGroup implements Group
                     $memberResponses[] = $object->respond();
                 }
 
-                $responses[] = $memberResponses;
+                // $responses[] = $memberResponses;
             }
         }
 

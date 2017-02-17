@@ -19,7 +19,7 @@ class ORGroup implements Group
      *
      * @return Group return the current group instance
      */
-    public function addObject(GroupObject $object) : Group
+    public function add(GroupObject $object) : Group
     {
         $this->objects[] = $object;
 
@@ -32,7 +32,7 @@ class ORGroup implements Group
      * @return GroupObject[]
      *  return an array of GroupObject objects
      */
-    public function getObjects() : array
+    public function get() : array
     {
         return $this->objects;
     }
@@ -86,7 +86,7 @@ class ORGroup implements Group
                 $memberResponses[] = $object->respond();
             }
 
-            $responses[] = $memberResponses;
+            // $responses[] = $memberResponses;
         }
 
         return $responses;

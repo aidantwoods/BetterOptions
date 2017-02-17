@@ -1,0 +1,38 @@
+[
+    {
+        "group": "or",
+        "members": [
+            {
+                "option": "foo",
+                "type": "string",
+                "default": "foo-default",
+                "characteristic": "long",
+                "description": "Foo.",
+                "aliases": [
+                    {
+                        "option": "fooalias",
+                        "characteristic": "short"
+                    }
+                ]
+            },
+            {
+                "option": "bar",
+                "type": "string[]",
+                "default": "bar-default"
+            },
+            {
+                "group": "xor",
+                "members": [
+                    {
+                        "option": "baz",
+                        "type": "bool"
+                    },
+                    {
+                        "option": "boo",
+                        "type": "integer"
+                    }
+                ]
+            }
+        ]
+    }
+]

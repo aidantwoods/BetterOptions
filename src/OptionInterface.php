@@ -2,16 +2,18 @@
 
 namespace Aidantwoods\BetterOptions;
 
-interface Option extends GroupObject
+/**
+ * An OptionInterface's constructor is responsible for ensuring that the
+ * option is set
+ */
+interface OptionInterface extends GroupObject
 {
     const LONG       = 0b001;
     const SHORT      = 0b010;
-    const POSITIONAL = 0b100;
 
     const CHARACTERISTICS = array(
         'LONG'       => self::LONG,
-        'SHORT'      => self::SHORT,
-        'POSITIONAL' => self::POSITIONAL
+        'SHORT'      => self::SHORT
     );
 
     /**

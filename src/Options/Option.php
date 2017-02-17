@@ -4,24 +4,30 @@ namespace Aidantwoods\BetterOptions\Options;
 
 use Exception;
 use Aidantwoods\BetterOptions\Type;
-use Aidantwoods\BetterOptions\Option;
+use Aidantwoods\BetterOptions\OptionInterface;
 use Aidantwoods\BetterOptions\Response;
+use Aidantwoods\BetterOptions\OptionParser;
 
-class RealOption implements Option
+class Option extends OptionAlliance implements OptionInterface
 {
     private $name,
             $value,
             $characteristic,
             $type,
             $default,
-            $set;
+            $set,
+            $aliases = array();
 
     public function __construct(
         string $name,
-        int    $characteristic = Option::SHORT,
+       ?int    $characteristic = Option::LONG,
        ?string $type = 'bool',
         string $default = null
     ) {
+        $characteristic = $characteristic ?? Option::SHORT;
+
+        $type = $type ?? 'bool';
+
         $this->name = $name;
 
         if ( ! in_array($characteristic, self::CHARACTERISTICS, true))
@@ -29,6 +35,7 @@ class RealOption implements Option
             throw new Exception(
                 "The characteristic for option named $name is not valid.\n"
                 . "Valid types: "
+                ."\n\tOption::"
                 . implode(
                     "\n\tOption::",
                     array_flip(self::CHARACTERISTICS)
@@ -49,6 +56,8 @@ class RealOption implements Option
         }
 
         $this->value = $this->default = $default;
+
+        OptionParser::bindValue($this);
     }
 
     /**
@@ -84,7 +93,7 @@ class RealOption implements Option
             $prefix = '';
         }
 
-        return $prefix.$this->name;
+        return $prefix.$this->getName();
     }
 
     /**
@@ -150,8 +159,10 @@ class RealOption implements Option
                 : $value
             );
         }
-
-        $this->value = Type::cast($value, $this->type);
+        else
+        {
+            $this->value = Type::cast($value, $this->type);
+        }
 
         $this->set = true;
     }
@@ -175,5 +186,17 @@ class RealOption implements Option
     public function respond() : array
     {
         return array();
+    }
+
+    /**
+     * Bind an alias to the root Option
+     *
+     * @param AliasOption $alias the alias instance to bind
+     *
+     * @return void
+     */
+    protected function bindAlias(AliasOption $alias)
+    {
+        $this->aliases[] = $alias;
     }
 }

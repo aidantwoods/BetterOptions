@@ -2,22 +2,57 @@
 
 namespace Aidantwoods\BetterOptions\Options;
 
-use Aidantwoods\BetterOptions\Option;
+use Aidantwoods\BetterOptions\OptionInterface;
+use Aidantwoods\BetterOptions\OptionParser;
 
-class AliasOption implements Option
+class AliasOption extends OptionAlliance implements OptionInterface
 {
     private $name,
+            $characteristic,
             $option;
+
+    /**
+     * Construct the alias such that appropriate method calls are rerouted,
+     * and bind this instance to the root alias
+     */
+    public function __construct(
+        string $name,
+       ?int $characteristic = Option::SHORT,
+        OptionAlliance $option
+    ) {
+        $characteristic = $characteristic ?? Option::SHORT;
+
+        if ( ! in_array($characteristic, self::CHARACTERISTICS, true))
+        {
+            throw new Exception(
+                "The characteristic for option named $name is not valid.\n"
+                . "Valid types: "
+                ."\n\tOption::"
+                . implode(
+                    "\n\tOption::",
+                    array_flip(self::CHARACTERISTICS)
+                )
+            );
+        }
+
+        $this->characteristic = $characteristic;
+
+        $this->name   = $name;
+        $this->option = $option;
+
+        $this->bindAlias($this);
+
+        OptionParser::bindValue($this);
+    }
 
     /**
      * Get the option name
      *
      * @return string return the option name
      */
-    public function __construct(string $name, Option &$option)
+    public function getName() : string
     {
-        $this->name   = $name;
-        $this->option = $option;
+        return $this->option->getName();
     }
 
     /**
@@ -26,9 +61,24 @@ class AliasOption implements Option
      *
      * @return string return the printable option name
      */
-    public function getName() : string
+    public function getPrintableName() : string
     {
-        return $this->name;
+        $characteristic = $this->getCharacteristic();
+
+        if ($characteristic === Option::LONG)
+        {
+            $prefix = '--';
+        }
+        elseif ($characteristic === Option::SHORT)
+        {
+            $prefix = '-';
+        }
+        elseif ($characteristic === Option::POSITIONAL)
+        {
+            $prefix = '';
+        }
+
+        return $prefix.$this->name;
     }
 
     /**
@@ -46,9 +96,9 @@ class AliasOption implements Option
      *
      * @return integer return an integer from the self::CHARACTERISTICS array
      */
-    public function getCharacteristic() : integer
+    public function getCharacteristic() : int
     {
-        return $this->option->getCharacteristic();
+        return $this->characteristic;
     }
 
     /**
@@ -91,7 +141,7 @@ class AliasOption implements Option
      * @return bool return true if the option has been set via
      *  {@see setValue}, false otherwise
      */
-    public function isSet() : boolean
+    public function isSet() : bool
     {
         return $this->option->isSet();
     }
@@ -103,6 +153,18 @@ class AliasOption implements Option
      */
     public function respond() : array
     {
-        return $this->option->isSet();
+        return $this->option->respond();
+    }
+
+    /**
+     * Bind an alias to the root Option
+     *
+     * @param AliasOption $alias the alias instance to bind
+     *
+     * @return void
+     */
+    protected function bindAlias(AliasOption $alias)
+    {
+        $this->option->bindAlias($alias);
     }
 }

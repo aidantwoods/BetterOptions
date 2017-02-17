@@ -11,7 +11,7 @@ interface Group extends GroupObject
      *
      * @return Group return the current group instance
      */
-    public function addObject(GroupObject $object) : Group;
+    public function add(GroupObject $object) : Group;
 
     /**
      * Get objects in a group
@@ -19,7 +19,7 @@ interface Group extends GroupObject
      * @return GroupObject[]
      *  return an array of GroupObject objects
      */
-    public function getObjects() : array;
+    public function get() : array;
 
     /**
      * Validate the group is complete.

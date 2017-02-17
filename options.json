@@ -4,7 +4,7 @@
         "members": [
             {
                 "option": "foo",
-                "type": "string",
+                "type": "string[]",
                 "default": "foo-default",
                 "characteristic": "long",
                 "description": "Foo.",
@@ -25,7 +25,8 @@
                 "members": [
                     {
                         "option": "baz",
-                        "type": "bool"
+                        "type": "bool",
+                        "description": "asasfasfa asagagds ag adg sdh sdh sh sdhs hdshsdhsdhsdh sdhs hsdhsdhsh sdhsdhsd"
                     },
                     {
                         "option": "boo",
@@ -34,5 +35,11 @@
                 ]
             }
         ]
+    },
+    {
+        "option": "help",
+        "type": "bool",
+        "characteristic": "long",
+        "description": "Print this help dialogue"
     }
 ]

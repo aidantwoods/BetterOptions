@@ -136,6 +136,26 @@ class AliasOption extends OptionAlliance implements OptionInterface
     }
 
     /**
+     * Set a description for the option
+     *
+     * @param string $description the description
+     */
+    public function setDescription(string $description)
+    {
+        $this->option->setDescription($description);
+    }
+
+    /**
+     * Get the description of the option
+     *
+     * @return ?string $description the description
+     */
+    public function getDescription() : ?string
+    {
+        return $this->option->getDescription();
+    }
+
+    /**
      * Check whether the option has been set
      *
      * @return bool return true if the option has been set via

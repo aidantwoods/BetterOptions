@@ -16,7 +16,8 @@ class Option extends OptionAlliance implements OptionInterface
             $type,
             $default,
             $set,
-            $aliases = array();
+            $aliases = array(),
+            $description;
 
     public function __construct(
         string $name,
@@ -24,7 +25,7 @@ class Option extends OptionAlliance implements OptionInterface
        ?string $type = 'bool',
         string $default = null
     ) {
-        $characteristic = $characteristic ?? Option::SHORT;
+        $characteristic = $characteristic ?? Option::LONG;
 
         $type = $type ?? 'bool';
 
@@ -168,6 +169,26 @@ class Option extends OptionAlliance implements OptionInterface
     }
 
     /**
+     * Set a description for the option
+     *
+     * @param string $description the description
+     */
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * Get the description of the option
+     *
+     * @return ?string $description the description
+     */
+    public function getDescription() : ?string
+    {
+        return $this->description;
+    }
+
+    /**
      * Check whether the option has been set
      *
      * @return bool return true if the option has been set via
@@ -186,6 +207,18 @@ class Option extends OptionAlliance implements OptionInterface
     public function respond() : array
     {
         return array();
+    }
+
+    public function getAliasNames() : array
+    {
+        $names = array();
+
+        foreach ($this->aliases as $alias)
+        {
+            $names[] = $alias->getPrintableName();
+        }
+
+        return $names;
     }
 
     /**

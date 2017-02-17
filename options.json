@@ -19,7 +19,7 @@
             },
             {
                 "option": "bar",
-                "type": "string[]",
+                "type": "string",
                 "default": "bar-default"
             },
             {

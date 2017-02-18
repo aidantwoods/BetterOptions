@@ -22,6 +22,20 @@ interface Group extends GroupObject
     public function get() : array;
 
     /**
+     * Give the group a name so that it may be easily retrieved
+     *
+     * @param string $name the group name
+     */
+    public function setName(string $name);
+
+    /**
+     * Get the group a name
+     *
+     * @return string the group name
+     */
+    public function getName() : ?string;
+
+    /**
      * Validate the group is complete.
      * A group is responsible for defining its own completeness 
      *

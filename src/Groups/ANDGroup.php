@@ -10,7 +10,8 @@ use Aidantwoods\BetterOptions\GroupObject;
 
 class ANDGroup implements Group
 {
-    private $objects = array();
+    private $objects = array(),
+            $name;
 
     /**
      * Add an object to the group
@@ -35,6 +36,26 @@ class ANDGroup implements Group
     public function get() : array
     {
         return $this->objects;
+    }
+
+    /**
+     * Give the group a name so that it may be easily retrieved
+     *
+     * @param string $name the group name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Get the group a name
+     *
+     * @return string the group name
+     */
+    public function getName() : ?string
+    {
+        return $this->name;
     }
 
     /**

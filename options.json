@@ -24,6 +24,7 @@
             },
             {
                 "group": "xor",
+                "name": "my-xor-group",
                 "members":
                 [
                     {

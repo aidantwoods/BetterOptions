@@ -20,6 +20,11 @@ if ($optionLoader->getOption('--help')->getValue())
     // die();
 }
 
+if ( ! $optionLoader->getGroup('my-xor-group')->isSet())
+{
+    echo "my-xor-group was not set :( \n";
+}
+
 foreach ($optionLoader->getOptions() as $option)
 {
     echo $option->getName() . ":\n";

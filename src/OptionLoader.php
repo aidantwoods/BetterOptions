@@ -30,7 +30,8 @@ class OptionLoader
 
     private $objects = array();
 
-    private $optionCatalogue = array();
+    private $optionCatalogue = array(),
+            $groupCatalogue  = array();
 
     private $lineChars = 50;
 
@@ -66,9 +67,19 @@ class OptionLoader
         return $this->optionCatalogue;
     }
 
-    public function getOption(string $printableName) : Option
+    public function getOption(string $printableName) : ?Option
     {
         return $this->optionCatalogue[$printableName] ?? null;
+    }
+
+    public function getGroups() : array
+    {
+        return $this->groupCatalogue;
+    }
+
+    public function getGroup(string $name) : ?Group
+    {
+        return $this->groupCatalogue[$name] ?? null;
     }
 
     public function getHelp() : string
@@ -203,6 +214,15 @@ class OptionLoader
         $groupClass = self::GROUP_NAMESPACE."${type}Group";
 
         $group = new $groupClass();
+
+        $name = $item->name ?? null;
+
+        if (isset($name))
+        {
+            $group->setName($name);
+
+            $this->groupCatalogue[$group->getName()] = $group;
+        }
 
         foreach ($this->itterator($item->members) as $object)
         {

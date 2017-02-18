@@ -2,9 +2,9 @@
 *than [`getopt()`](http://php.net/manual/en/function.getopt.php)*
 
 ## Synopsis
-`getopt()` sucks. Flags (booleans – options with no value) are set as false
+`getopt()` sucks. Flags (options with no value) are set as false
 **when they *are* set**,
-options that do not exist will cause a key error if you attempt to look them up.
+options that are unset by the user will cause a key error if you attempt to look them up.
 If multiple options are specified you are given an array containing them all,
 regardless of whether you wanted to recieve an array.
 
@@ -12,10 +12,12 @@ There is no way to specify which type you are expecting. If compulsory options
 are left unspecified by the user, this will prevent other compulsory options
 from being parsed, (but will not enforce that these options are present).
 "long" options are specified in an array, while "short" options are specified
-as a string...
+by concatenating a string...
 
 All this means that in order to accept command line options, lots (and lots) of
-ugly validation logic must be manually written.
+ugly validation logic must be manually written. And making use of "long" and
+"short" options creates unnessesary code to special case the configuration of
+things that aren't functionally different.
 
 ---
 
@@ -23,7 +25,9 @@ Instead, create a json file specifying logical (AND, OR, XOR) requirement groups
 of options, and/or just specify options on their own with no requirements.
 
 The expected type of an option can be specified, and this is the type you will
-recieve (or `null` if not set).
+recieve (or `null` if not set). Optionally specify a default value (you can
+still query whether the user set the variable or the default was loaded without
+having to hard code in a comparison to the default).
 
 If you're not expecting multiple options you won't get an array. If you want to
 accept multiple options, but can cope with one just fine you can recieve an

@@ -8,8 +8,8 @@ namespace Aidantwoods\BetterOptions;
  */
 interface OptionInterface extends GroupObject
 {
-    const LONG       = 0b001;
-    const SHORT      = 0b010;
+    const LONG       = 0b01;
+    const SHORT      = 0b10;
 
     const CHARACTERISTICS = array(
         'LONG'       => self::LONG,
@@ -30,6 +30,20 @@ interface OptionInterface extends GroupObject
      * @return string return the printable option name
      */
     public function getPrintableName() : string;
+
+    /**
+     * Set the option's fixed name
+     *
+     * @param string $name
+     */
+    public function setFixedName(string $name);
+
+    /**
+     * Get the option's fixed name
+     *
+     * @return string the fixed name
+     */
+    public function getFixedName() : string;
 
     /**
      * Get the option value
@@ -61,7 +75,7 @@ interface OptionInterface extends GroupObject
     public function getDefault();
 
     /**
-     * Set the options value
+     * Set the option's value
      *
      * @param mixed $value set a value of the type returned by {@see getType}.
      *  record this event such that {@see isSet} will return true

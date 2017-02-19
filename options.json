@@ -29,6 +29,7 @@
                 [
                     {
                         "option": "baz",
+                        "name": "fixed-baz-name",
                         "type": "bool",
                         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut fermentum tristique enim quis consequat. Sed dignissim mi in erat gravida, sed interdum mauris iaculis. Quisque nulla dolor, sollicitudin quis pretium non, venenatis eu tortor. Mauris eget enim leo. Etiam pretium semper leo, eu elementum lacus luctus in. Cras elit ex, rhoncus ac gravida ac, pulvinar porttitor sapien. Ut vel purus sollicitudin, finibus est ac, imperdiet elit. Ut sollicitudin at nunc et dapibus."
                     },
@@ -42,6 +43,7 @@
     },
     {
         "option": "help",
+        "name": "help",
         "type": "bool",
         "characteristic": "long",
         "description": "Print this help dialogue"

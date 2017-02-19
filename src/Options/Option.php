@@ -11,6 +11,7 @@ use Aidantwoods\BetterOptions\OptionParser;
 class Option extends OptionAlliance implements OptionInterface
 {
     private $name,
+            $fixedName,
             $value,
             $characteristic,
             $type,
@@ -89,12 +90,28 @@ class Option extends OptionAlliance implements OptionInterface
         {
             $prefix = '-';
         }
-        elseif ($characteristic === Option::POSITIONAL)
-        {
-            $prefix = '';
-        }
 
-        return $prefix.$this->getName();
+        return $prefix.$this->name;
+    }
+
+    /**
+     * Set the option's fixed name
+     *
+     * @param string $name
+     */
+    public function setFixedName(string $name)
+    {
+        $this->fixedName = $name;
+    }
+
+    /**
+     * Get the option's fixed name
+     *
+     * @return string the fixed name
+     */
+    public function getFixedName() : string
+    {
+        return $this->fixedName;
     }
 
     /**
@@ -139,7 +156,7 @@ class Option extends OptionAlliance implements OptionInterface
     }
 
     /**
-     * Set the options value
+     * Set the option's value
      *
      * @param mixed $value set a value of the type returned by {@see getType}.
      *  record this event such that {@see isSet} will return true

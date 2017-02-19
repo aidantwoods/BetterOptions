@@ -82,6 +82,26 @@ class AliasOption extends OptionAlliance implements OptionInterface
     }
 
     /**
+     * Set the option's fixed name
+     *
+     * @param string $name
+     */
+    public function setFixedName(string $name)
+    {
+        return $this->option->setFixedName($name);
+    }
+
+    /**
+     * Get the option's fixed name
+     *
+     * @return string the fixed name
+     */
+    public function getFixedName() : string
+    {
+        return $this->option->getFixedName();
+    }
+
+    /**
      * Get the option value
      *
      * @return mixed return a value of the type specified by {@see getType}
@@ -123,7 +143,7 @@ class AliasOption extends OptionAlliance implements OptionInterface
     }
 
     /**
-     * Set the options value
+     * Set the option's value
      *
      * @param mixed $value set a value of the type returned by {@see getType}.
      *  record this event such that {@see isSet} will return true

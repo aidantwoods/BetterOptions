@@ -14,7 +14,7 @@ require_once('vendor/autoload.php');
 
 $optionLoader = new OptionLoader('options.json');
 
-if ($optionLoader->getOption('--help')->getValue())
+if ($optionLoader->getOption('help')->getValue())
 {
     echo $optionLoader->getHelp();
     // die();

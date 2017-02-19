@@ -119,7 +119,10 @@ class OptionLoader
      */
     public function getHelp() : string
     {
-        return HelpFormatter::generate($this->optionCatalogue, 50);
+        return HelpFormatter::generate(
+            array_unique($this->optionCatalogue, SORT_REGULAR),
+            50
+        );
     }
 
     /**
@@ -267,11 +270,26 @@ class OptionLoader
 
         $description = $item->description ?? null;
 
+        $fixedName = $item->name ?? null;
+
         $option = new Option($name, $characteristic, $type, $default);
 
         if (isset($description))
         {
             $option->setDescription($description);
+        }
+
+        if (isset($fixedName))
+        {
+            if ($fixedName[0] === '-')
+            {
+                throw new Exception(
+                    "An option's fixed name may not start with a `-`.\n\n"
+                    ." Error near: ".var_export($item, true)
+                );
+            }
+
+            $option->setFixedName($fixedName);
         }
 
         if (isset($item->aliases))
@@ -289,6 +307,11 @@ class OptionLoader
 
                 new AliasOption($alias->option, $aliasCharacteristic, $option);
             }
+        }
+
+        if (isset($fixedName))
+        {
+            $this->optionCatalogue[$fixedName] = $option;
         }
 
         $this->optionCatalogue[$option->getPrintableName()] = $option;

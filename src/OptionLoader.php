@@ -11,6 +11,8 @@ use Aidantwoods\BetterOptions\Groups\ANDGroup;
 use Aidantwoods\BetterOptions\Options\Option;
 use Aidantwoods\BetterOptions\Options\AliasOption;
 
+use Aidantwoods\BetterOptions\Text\HelpFormatter;
+
 class OptionLoader
 {
     const GROUP_TYPES = array(
@@ -25,8 +27,6 @@ class OptionLoader
 
     private $optionCatalogue = array(),
             $groupCatalogue  = array();
-
-    private $lineChars = 50;
 
      /**
      * Load options from a .json file
@@ -119,63 +119,7 @@ class OptionLoader
      */
     public function getHelp() : string
     {
-        $lines = array();
-        $nameCols = array();
-
-        $maxLineLength = 0;
-
-        # make sure keys are ordered
-        $options = array_values($this->optionCatalogue);
-
-        foreach ($options as $option)
-        {
-            $line = '';
-
-            $line .= $option->getPrintableName();
-
-            $aliases = $option->getAliasNames();
-
-            if ( ! empty($aliases))
-            {
-                $line .= ', '.implode(', ', $aliases);
-            }
-
-            if (($len = strlen($line)) > $maxLineLength)
-            {
-                $maxLineLength = $len;
-            }
-
-            $nameCols[] = $line;
-        }
-
-        $desciptionCharStart = $maxLineLength + 4;
-
-        $desciptionCharStart += 4 - ($desciptionCharStart % 4);
-
-        foreach ($options as $key => $option)
-        {
-            $line = $nameCols[$key];
-
-            $description = $option->getDescription();
-
-            if (isset($description))
-            {
-                $this->formatLineWithDescription(
-                    $line,
-                    $description,
-                    $desciptionCharStart,
-                    $lines
-                );
-            }
-            else
-            {
-                $lines[] = $line;
-            }
-        }
-
-        $lines[] = '';
-
-        return implode("\n", $lines);
+        return HelpFormatter::generate($this->optionCatalogue, 50);
     }
 
     /**
@@ -388,85 +332,6 @@ class OptionLoader
             {
                 yield $response->getMessage();
             }
-        }
-    }
-
-    private function descriptionTrimmer(
-        string $description,
-        int $desciptionCharStart
-    ) {
-        $remainder = $description;
-
-        $firstLine = true;
-
-        while (strlen($remainder) > 0)
-        {
-            $space = '';
-
-            if ( ! $firstLine)
-            {
-                $space = str_repeat(' ', $desciptionCharStart);
-            }
-
-            if (($len = strlen($remainder)) > $this->lineChars)
-            {
-                if (
-                    ($n = strrpos(
-                        $remainder,
-                        ' ',
-                        $this->lineChars - $len
-                    )) !== false
-                ) {
-                    $piece = substr($remainder, 0, $n);
-
-                    # plus one to remove leading space
-                    $remainder = substr($remainder, $n + 1);
-                }
-                else
-                {
-                    $piece = substr($remainder, 0, $this->lineChars
-                    );
-
-                    $remainder = substr($remainder, $this->lineChars);
-                }
-            }
-            else
-            {
-                $piece = $remainder;
-
-                $remainder = '';
-            }
-
-            yield $space.$piece;
-
-            $firstLine = false;
-        }
-    }
-
-    private function formatLineWithDescription(
-        string $line,
-        string $description,
-        int $desciptionCharStart,
-        array &$lines
-    ) {
-        $description = preg_replace('/\n|\r/', '', $description);
-
-        $spaceRepeat = $desciptionCharStart - strlen($line);
-
-        $line .= str_repeat(' ', $spaceRepeat);
-
-        $i = 0;
-
-        foreach (
-            $this->descriptionTrimmer($description, $desciptionCharStart)
-            as $i => $piece
-        ) {
-            $lines[] = ($i === 0 ? $line : '').$piece;
-        }
-
-        if ($i > 0)
-        {
-            $lines[] = '';
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace Aidantwoods\BetterOptions;
 
 use Exception;
+use stdClass;
 
 use Aidantwoods\BetterOptions\Groups\ORGroup;
 use Aidantwoods\BetterOptions\Groups\XORGroup;
@@ -12,14 +13,6 @@ use Aidantwoods\BetterOptions\Options\AliasOption;
 
 class OptionLoader
 {
-    /**
-     * Load options from a .json file
-     *
-     * @param string $config
-     *
-     * @return GroupObject
-     */
-
     const GROUP_TYPES = array(
         'OR',
         'AND',
@@ -35,6 +28,11 @@ class OptionLoader
 
     private $lineChars = 50;
 
+     /**
+     * Load options from a .json file
+     *
+     * @param string $config
+     */
     public function __construct(string $config)
     {
         if ( ! is_file($config))
@@ -57,31 +55,68 @@ class OptionLoader
         }
     }
 
-    public function getObjects()
+    /**
+     * Get an array of all GroupObjects in a hierarchy (groups contain their
+     * options)
+     *
+     * @return GroupObject[]
+     */
+    public function getObjects() : array
     {
         return $this->objects;
     }
 
+    /**
+     * Get an array of all options (no hierarchy, just a list of all options)
+     *
+     * @return OptionInterface[]
+     */
     public function getOptions() : array
     {
         return $this->optionCatalogue;
     }
 
-    public function getOption(string $printableName) : ?Option
+    /**
+     * Get an option by name (make sure to include preceding dashes)
+     *
+     * @param string $printableName
+     *
+     * @return ?OptionInterface
+     *  returns the option, or null if option does not exist
+     */
+    public function getOption(string $printableName) : ?OptionInterface
     {
         return $this->optionCatalogue[$printableName] ?? null;
     }
 
+    /**
+     * Get an array of all groups that are named
+     *
+     * @return Group[]
+     */
     public function getGroups() : array
     {
         return $this->groupCatalogue;
     }
 
+    /**
+     * Get a named group of a particular name
+     *
+     * @param string $name
+     *
+     * @return ?Group the group, or null if the group does not exist
+     */
     public function getGroup(string $name) : ?Group
     {
         return $this->groupCatalogue[$name] ?? null;
     }
 
+    /**
+     * Get an auto-generated help message based on the list of all options,
+     * their descriptions, and aliases
+     *
+     * @return string
+     */
     public function getHelp() : string
     {
         $lines = array();
@@ -143,7 +178,12 @@ class OptionLoader
         return implode("\n", $lines);
     }
 
-    public function getResponseMessages()
+    /**
+     * Get an array of response messages from all GroupObjects loaded
+     *
+     * @return string[]
+     */
+    public function getResponseMessages() : array
     {
         $responses = array();
 
@@ -162,7 +202,17 @@ class OptionLoader
         return $messages;
     }
 
-    private function itterator($json)
+    /**
+     * Generator function to itterate over an array from a .json file.
+     * Individual items are identified and given to the appropriate parser.
+     * The resulting object returned by the parser is yielded.
+     *
+     * @param array $json
+     *  an array of items from the entire json file or a part of it
+     *
+     * @return \Generator|GroupObject[]
+     */
+    private function itterator(array $json)
     {
         foreach ($json as $item)
         {
@@ -177,7 +227,17 @@ class OptionLoader
         }
     }
 
-    private function identifyObject($item)
+    /**
+     * Identify the object parser that a particular item should be handed to
+     *
+     * @param stdClass $item a non iterable item from json_decode
+     *
+     * @return string
+     *  the type of parser that should be used to parse the given item
+     *
+     * @throws Exception if the correc $item parser cannot be identified
+     */
+    private function identifyObject(stdClass $item)
     {
         if (
             isset($item->group)
@@ -200,7 +260,14 @@ class OptionLoader
         }
     }
 
-    private function parseGroup($item) : Group
+    /**
+     * Parse a group from json
+     *
+     * @param stdClass $item
+     *
+     * @return Group
+     */
+    private function parseGroup(stdClass $item) : Group
     {
         $type = strtoupper($item->group);
 
@@ -232,7 +299,14 @@ class OptionLoader
         return $group;
     }
 
-    private function parseOption($item) : Option
+    /**
+     * Parse an option from json
+     *
+     * @param stdClass $item
+     *
+     * @return Option
+     */
+    private function parseOption(stdClass $item) : Option
     {
         $name = $item->option;
 
@@ -278,11 +352,27 @@ class OptionLoader
         return $option;
     }
 
+    /**
+     * Given a characteristic string, return the associated bitmask
+     *
+     * @param string $characteristic
+     *
+     * @return int
+     */
     private function optionCharacteristic(string $characteristic) : int
     {
         return Option::CHARACTERISTICS[strtoupper($characteristic)];
     }
 
+    /**
+     * Given an arbitrarily nested array of either Response objects or arrays
+     * of Response objects, (or Response objects and arrays of arrays of
+     * Response objects etc...) yield the response strings
+     *
+     * @param Response[]|array[] $responses
+     *
+     * @return \Generator|string[]
+     */
     private function responder(array &$responses)
     {
         foreach ($responses as &$response)

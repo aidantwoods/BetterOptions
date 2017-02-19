@@ -99,7 +99,7 @@ class ANDGroup implements Group
         if ( ! $this->isSet())
         {
             $responses[] = new Response(
-                $this->getPrintableName().' must all be set'
+                $this->getPrintableName().' must be set'
             );
             
             $memberResponses = array();

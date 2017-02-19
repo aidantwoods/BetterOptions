@@ -1,9 +1,16 @@
 {
     "name": "aidantwoods/betteroptions",
-    "description": "",
+    "description": "Better than `getopt()`",
+    "keywords": [
+        "betteroptions",
+        "better",
+        "options",
+        "getopt",
+        "php"
+    ],
     "license": "MIT",
     "autoload": {
-        "psr-4":{
+        "psr-4": {
             "Aidantwoods\\BetterOptions\\": ["src/"]
         }
     },

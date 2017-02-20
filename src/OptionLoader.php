@@ -10,9 +10,6 @@ use Aidantwoods\BetterOptions\Options\AliasOption;
 
 use Aidantwoods\BetterOptions\Text\HelpFormatter;
 
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Yaml\Exception\ParseException;
-
 class OptionLoader
 {
     const GROUP_TYPES = array(
@@ -23,15 +20,6 @@ class OptionLoader
 
     const GROUP_NAMESPACE = 'Aidantwoods\\BetterOptions\\Groups\\';
 
-    const JSON = 0b001;
-    const YAML = 0b010;
-    const AUTO = 0b100;
-
-    const EXT_TYPE_MAP = array(
-        'json' => self::JSON,
-        'yaml' => self::YAML
-    );
-
     private $objects = array();
 
     private $optionCatalogue = array(),
@@ -41,15 +29,18 @@ class OptionLoader
      * Load options from a file data structure
      *
      * @param string $config
+     *  the file in which the configuration lies
+     * @param ?string $type
+     *  the file extension that the file should be treated as possessing 
      */
-    public function __construct(string $config, ?int $type = null)
+    public function __construct(string $config, ?string $type = null)
     {
         if ( ! is_file($config))
         {
             throw new OptionLoaderException("File $config not found");
         }
 
-        $data = self::loadData($config, $type);
+        $data = FileLoaderFactory::load($config, $type);
 
         foreach ($this->itterator($data) as $object)
         {
@@ -143,7 +134,7 @@ class OptionLoader
 
         $messages = array();
 
-        foreach ($this->responder($responses) as $message)
+        foreach (self::responder($responses) as $message)
         {
             $messages[] = $message;
         }
@@ -228,55 +219,6 @@ class OptionLoader
         }
     }
 
-    private static function loadData(string $file, ?int $type = null)
-    {
-        if ($type === self::JSON)
-        {
-            $data = json_decode(file_get_contents($file), true);
-
-            if ( ! isset($data))
-            {
-                throw new OptionLoaderException(
-                    "File $file does not appear to be valid JSON"
-                );
-            }
-        }
-        elseif ($type === self::YAML)
-        {
-            try
-            {
-                $data = Yaml::parse(file_get_contents($file));
-            }
-            catch (ParseException $e)
-            {
-                throw new OptionLoaderException(
-                    "File $file does not appear to be valid YAML: "
-                    .$e->getMessage()
-                );
-            }
-        }
-        else
-        # assume $type === self:AUTO
-        {
-            foreach (self::EXT_TYPE_MAP as $ext => $type)
-            {
-                if (preg_match('/[.]'.preg_quote($ext, '/').'$/i', $file))
-                {
-                    $data = self::loadData($file, $type);
-                }
-            }
-
-            if ( ! isset($data))
-            {
-                throw new OptionLoaderException(
-                    "File $file does not appear to be valid"
-                );
-            }
-        }
-
-        return $data;
-    }
-
     /**
      * Parse a group from file data structure
      *
@@ -332,7 +274,7 @@ class OptionLoader
 
         if (isset($characteristic))
         {
-            $characteristic = $this->optionCharacteristic($characteristic);
+            $characteristic = self::optionCharacteristic($characteristic);
         }
 
         $type = $item['type'] ?? null;
@@ -371,7 +313,7 @@ class OptionLoader
 
                 if (isset($aliasCharacteristic))
                 {
-                    $aliasCharacteristic = $this->optionCharacteristic(
+                    $aliasCharacteristic = self::optionCharacteristic(
                         $aliasCharacteristic
                     );
                 }
@@ -407,7 +349,7 @@ class OptionLoader
      *
      * @return int
      */
-    private function optionCharacteristic(string $characteristic) : int
+    private static function optionCharacteristic(string $characteristic) : int
     {
         return Option::CHARACTERISTICS[strtoupper($characteristic)];
     }
@@ -421,7 +363,7 @@ class OptionLoader
      *
      * @return \Generator|string[]
      */
-    private function responder(array &$responses)
+    private static function responder(array &$responses)
     {
         foreach ($responses as &$response)
         {

@@ -121,6 +121,11 @@ class Option extends OptionAlliance implements OptionInterface
      */
     public function getValue()
     {
+        if ( ! $this->isSet() and isset($this->default))
+        {
+            $this->setValue($this->default, true);
+        }
+
         return $this->value;
     }
 
@@ -160,10 +165,10 @@ class Option extends OptionAlliance implements OptionInterface
      *
      * @param mixed $value set a value of the type returned by {@see getType}.
      *  record this event such that {@see isSet} will return true
-     *
-     * @return mixed return a value of the type returned by {@see getType}
+     * @param bool $preserveSetStatus whether to set without changing the value
+     *  returned by {@see isSet}
      */
-    public function setValue($value)
+    public function setValue($value, bool $preserveSetStatus = false)
     {
         if (Type::hasOuterArray($this->type) or $this->type === 'array')
         {
@@ -182,7 +187,10 @@ class Option extends OptionAlliance implements OptionInterface
             $this->value = Type::cast($value, $this->type);
         }
 
-        $this->set = true;
+        if ( ! $preserveSetStatus)
+        {
+            $this->set = true;
+        }
     }
 
     /**

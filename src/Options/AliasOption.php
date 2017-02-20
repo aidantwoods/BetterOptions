@@ -147,12 +147,12 @@ class AliasOption extends OptionAlliance implements OptionInterface
      *
      * @param mixed $value set a value of the type returned by {@see getType}.
      *  record this event such that {@see isSet} will return true
-     *
-     * @return mixed return a value of the type returned by {@see getType}
+     * @param bool $preserveSetStatus whether to set without changing the value
+     *  returned by {@see isSet}
      */
-    public function setValue($value)
+    public function setValue($value, bool $preserveSetStatus = false)
     {
-        return $this->option->setValue($value);
+        return $this->option->setValue($value, $preserveSetStatus);
     }
 
     /**

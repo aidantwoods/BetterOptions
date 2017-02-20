@@ -79,6 +79,8 @@ interface OptionInterface extends GroupObject
      *
      * @param mixed $value set a value of the type returned by {@see getType}.
      *  record this event such that {@see isSet} will return true
+     * @param bool $preserveSetStatus whether to set without changing the value
+     *  returned by {@see isSet}
      */
     public function setValue($value);
 

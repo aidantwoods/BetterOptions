@@ -21,8 +21,14 @@ things that aren't functionally different.
 
 ---
 
-Instead, create a json file specifying logical (AND, OR, XOR) requirement groups
+Instead, create a data structure file specifying logical (AND, OR, XOR) requirement groups
 of options, and/or just specify options on their own with no requirements.
+
+I say "data structure file" here because, in theory you can use whatever you
+like (provided you create an adapter that implements the right interface and
+register the file extension). The default supported file types are JSON using
+PHPs native parser, and YAML (if you also install Symfony's YAML parser from
+require dev in composer.json).
 
 The expected type of an option can be specified, and this is the type you will
 recieve (or `null` if not set). Optionally specify a default value (you can
@@ -34,7 +40,7 @@ accept multiple options, but can cope with one just fine you can recieve an
 array with one item in (types like `string[]`, `bool[]`, `integer[]` are arrays
 containing a certain type).
 
-You can document your options in the json file too, as well as specifying
+You can document your options in the data structure file too, as well as specifying
 whether you want a 'long' or 'short' (two or one dash) options without changing
 the structure of specification.
 
@@ -44,10 +50,10 @@ like (though two is almost always sufficient).
 You can recieve responses from groups if their logical conditions fail so you
 don't have to write error messages yourself, and you can even use an
 auto-generated help screen populated with the description of each option from
-the json file.
+the data structure file.
 
 ## Example
-Using the command line options configured in the example `options.json`,
+Using the command line options configured in the example `options.json`/`options.yaml`,
 and the code in `example.php`, the following can be achieved:
 
 ```bash
@@ -76,7 +82,7 @@ help:
 NULL
 ```
 
-If we change the type of --foo from `string[]` to `string` in `options.json`,
+If we change the type of --foo from `string[]` to `string` in `options.json`/`options.yaml`,
 we can instead get
 
 ```php
@@ -93,7 +99,7 @@ $ php example.php
 ```
 
 then the auto-generated response for incompleteness (based on logical groups
-setup in the json file) is as follows
+setup in the data file) is as follows
 
 ```
 At least one of {--foo or --bar or {--baz xor --boo}} must be set

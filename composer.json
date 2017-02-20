@@ -16,5 +16,11 @@
     },
     "require": {
         "php": ">=7.0"
+    },
+    "suggest": {
+        "symfony/yaml": "To support config via YAML files"
+    },
+    "require-dev": {
+        "symfony/yaml": "^3.2"
     }
 }

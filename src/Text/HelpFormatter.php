@@ -2,6 +2,8 @@
 
 namespace Aidantwoods\BetterOptions\Text;
 
+use Aidantwoods\BetterOptions\Math;
+
 class HelpFormatter
 {
     /**
@@ -26,7 +28,7 @@ class HelpFormatter
 
         foreach ($options as $option)
         {
-            $line = '';
+            $line = '  ';
 
             $line .= $option->getPrintableName();
 
@@ -47,7 +49,7 @@ class HelpFormatter
 
         $desciptionCharStart = $maxLineLength + 4;
 
-        $desciptionCharStart += 4 - ($desciptionCharStart % 4);
+        $desciptionCharStart += Math::mod(4 - $desciptionCharStart, 4);
 
         foreach ($options as $key => $option)
         {

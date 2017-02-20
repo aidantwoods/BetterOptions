@@ -12,7 +12,7 @@ require_once('vendor/autoload.php');
 
 # json config
 
-$optionLoader = new OptionLoader('options.json');
+$optionLoader = new OptionLoader('options.yaml');
 
 if ($optionLoader->getOption('help')->getValue())
 {
